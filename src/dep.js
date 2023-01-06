@@ -2,24 +2,32 @@ const path = require('path')
 const fs = require('fs')
 const { walkImports } = require('./ast')
 
-function createPathTree(filePath, treeNode) {
+
+function createPathTree(filePath, existNodes = {}) {
   const input = fs.readFileSync(filePath, {
     encoding: 'utf8'
   })
   const { dir: dirName, name: fileName} = path.parse(filePath)
 
   const deps = walkImports(input)
-  if (!treeNode) {
-    treeNode = {
-      name: fileName,
-      source: filePath,
-      children: []
-    }
+ 
+  const treeNode = {
+    name: fileName,
+    source: filePath,
+    children: []
   }
+  if (!existNodes[filePath]) {
+    existNodes[filePath] = treeNode
+  }
+  
   if (deps.length) {
     deps.forEach(value => {
       const relative = path.resolve(dirName, appendExtName(value))
-      treeNode.children.push(createPathTree(relative))
+      if (existNodes[relative]) {
+        treeNode.children.push(existNodes[relative])
+      } else {
+        treeNode.children.push(createPathTree(relative, existNodes))
+      }
     })
   }
   return treeNode
@@ -32,16 +40,6 @@ function appendExtName(path, extname = '.js') {
   return path
 }
 
-function isRelative(path) {
-  const char = path.charCodeAt(0)
-  return char === '.'
-}
-
-function resolveImportPath(target, importPath) {
-  if (isRelative(importPath)) {
-
-  }
-}
 
 function sort(list) {
   list.sort((pre, next) => {

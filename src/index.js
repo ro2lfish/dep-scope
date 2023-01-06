@@ -29,5 +29,5 @@ function detect(entry=[]) {
 
 
 detect([
-  path.resolve(__dirname, '../tests/mock/a.js')
+  path.resolve(__dirname, '../tests/mock/a1/j.js')
 ])
