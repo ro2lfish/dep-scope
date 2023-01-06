@@ -2,7 +2,6 @@ const path = require('path')
 const fs = require('fs')
 const { walkImports } = require('./ast')
 
-
 function createPathTree(filePath, existNodes = {}) {
   const input = fs.readFileSync(filePath, {
     encoding: 'utf8'
@@ -40,6 +39,18 @@ function appendExtName(path, extname = '.js') {
   return path
 }
 
+function treeToList(tree, list) {
+  if (!list) {
+    list = []
+  }
+  if (list.indexOf(tree.source) < 0) {
+    list.push(tree.source)
+  }
+  tree.children.forEach(node => {
+    treeToList(node, list)
+  })
+  return list
+}
 
 function sort(list) {
   list.sort((pre, next) => {
@@ -47,8 +58,8 @@ function sort(list) {
   })
 }
 
-
 module.exports = {
   sort,
+  treeToList,
   createPathTree,
 }
