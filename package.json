@@ -7,12 +7,15 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npm run test"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "acorn": "^8.8.1",
     "acorn-walk": "^8.2.0"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
   }
 }

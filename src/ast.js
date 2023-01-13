@@ -1,7 +1,7 @@
 const acorn = require('acorn')
 const walk = require('acorn-walk')
 
-function walkImports(input) {
+function parseImports(input) {
   const pathList = new Set()
 
   const visitors = {
@@ -32,5 +32,5 @@ function walkImports(input) {
 }
 
 module.exports = {
-  walkImports
+  parseImports
 }

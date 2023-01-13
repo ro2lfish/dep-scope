@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const { walkImports } = require('./ast')
+const { parseImports } = require('./ast')
 
 function createPathTree(filePath, existNodes = {}) {
   const input = fs.readFileSync(filePath, {
@@ -8,7 +8,7 @@ function createPathTree(filePath, existNodes = {}) {
   })
   const { dir: dirName, name: fileName} = path.parse(filePath)
 
-  const deps = walkImports(input)
+  const deps = parseImports(input)
  
   const treeNode = {
     name: fileName,
