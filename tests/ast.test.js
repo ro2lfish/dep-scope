@@ -1,3 +1,4 @@
+const { expect, test } = require('@jest/globals')
 const { parseImports } = require('../src/ast')
 
 test('parseImports应当返回数组类型', () => {
@@ -93,5 +94,46 @@ test('parseImports不会解析require方法', () => {
   expect(imports).toEqual([
     './src/a.js',
     './src/c.js',
+  ])
+})
+
+test('parseImports可以识别变量导入', () => {
+  let input = `
+    const { b } = import('./src/b.js')
+  `
+  let imports = parseImports(input)
+  expect(imports.length).toBe(1)
+  expect(imports).toEqual([
+    './src/b.js',
+  ])
+})
+
+test('parseImports可以识别别名标识符', () => {
+  let input = `
+    import { a as A } from './src/a.js'
+    import * as B from './src/b.js'
+  `
+  let imports = parseImports(input)
+  expect(imports.length).toBe(2)
+  expect(imports).toEqual([
+    './src/a.js',
+    './src/b.js'
+  ])
+})
+
+test('parseImports可以解析多种导入模式', () => {
+  let input = `
+    const a = import('./src/a.js')
+    import * as B from './src/b.js'
+    import { c as C } from './src/c.js'
+    import('./src/d.js')
+  `
+  let imports = parseImports(input)
+  expect(imports.length).toBe(4)
+  expect(imports).toEqual([
+    './src/a.js',
+    './src/b.js',
+    './src/c.js',
+    './src/d.js'
   ])
 })

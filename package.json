@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --collectCoverage"
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +17,12 @@
   },
   "devDependencies": {
     "jest": "^29.3.1"
+  },
+  "bin": {
+    "depscope": "bin/depscope"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
   }
 }

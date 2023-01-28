@@ -21,7 +21,7 @@ function createPathTree(filePath, existNodes = {}) {
   
   if (deps.length) {
     deps.forEach(value => {
-      const relative = path.resolve(dirName, appendExtName(value))
+      const relative = path.relative(process.cwd(), path.resolve(dirName, appendExtName(value)))
       if (existNodes[relative]) {
         treeNode.children.push(existNodes[relative])
       } else {
@@ -39,15 +39,15 @@ function appendExtName(path, extname = '.js') {
   return path
 }
 
-function treeToList(tree, list) {
+function toSourceList(treeNode, list) {
   if (!list) {
     list = []
   }
-  if (list.indexOf(tree.source) < 0) {
-    list.push(tree.source)
+  if (list.indexOf(treeNode.source) < 0) {
+    list.push(treeNode.source)
   }
-  tree.children.forEach(node => {
-    treeToList(node, list)
+  treeNode.children.forEach(node => {
+    toSourceList(node, list)
   })
   return list
 }
@@ -60,6 +60,7 @@ function sort(list) {
 
 module.exports = {
   sort,
-  treeToList,
+  toSourceList,
+  appendExtName,
   createPathTree,
 }

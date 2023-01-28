@@ -3,31 +3,33 @@ const walk = require('acorn-walk')
 
 function parseImports(input) {
   const pathList = new Set()
-
-  const visitors = {
-    ImportDeclaration(node) {
-      pathList.add(node.source.value)
-    },
-    // ImportSpecifier(node) {
-  
-    // },
-    // ImportNamespaceSpecifier(node) {
-  
-    // },
-    ImportExpression(node) {
-      pathList.add(node.source.value)
+  try {
+    const visitors = {
+      ImportDeclaration(node) {
+        pathList.add(node.source.value)
+      },
+      // ImportSpecifier(node) {
+    
+      // },
+      // ImportNamespaceSpecifier(node) {
+    
+      // },
+      ImportExpression(node) {
+        pathList.add(node.source.value)
+      }
     }
+    const ast = acorn.parse(input, {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      allowImportExportEverywhere: true,
+      allowReturnOutsideFunction: true,
+      allowReserved: true
+    })
+  
+    walk.simple(ast, visitors)
+  } catch (error) {
+    console.log(error)
   }
-  const ast = acorn.parse(input, {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    allowImportExportEverywhere: true,
-    allowReturnOutsideFunction: true,
-    allowReserved: true
-  })
-
-  walk.simple(ast, visitors)
-
   return Array.from(pathList)
 }
 

@@ -1,5 +1,5 @@
 const path = require('path')
-const { createPathTree, treeToList } = require('./dep')
+const { createPathTree, toSourceList } = require('./dep')
 const fs = require('fs')
 
 let scopeNodes = {}
@@ -8,7 +8,7 @@ function detectFile(filePath) {
   if (path.extname(filePath) === '.js') {
     try {
       const tree = createPathTree(filePath, scopeNodes)
-      return tree
+      return toSourceList(tree)
     } catch (error) {
       console.log(error)
     }
@@ -23,10 +23,11 @@ function detectDir(dirPath, options = {}, deep = 1) {
     let files = fs.readdirSync(dirPath)
     files = files.map(name => path.resolve(dirPath, name))
     
-    files.forEach(path => {
-      const stat = fs.statSync(path)
-      stat.isDirectory() && detectDir(path, options, deep + 1)
-      stat.isFile() && detectFile(path)
+    files.forEach(fileName => {
+      const relativePath = path.relative(process.cwd(), fileName)
+      const stat = fs.statSync(relativePath)
+      stat.isDirectory() && detectDir(relativePath, options, deep + 1)
+      stat.isFile() && detectFile(relativePath)
     })
     return Object.keys(scopeNodes)
   } catch (error) {
