@@ -10,7 +10,7 @@ const {
 
 test('createPathTree应当接收一个入口参数并返回结果', () => {
   const mock = j.fn((path) => createPathTree(path))
-  mock(path.resolve(__dirname, './mock/a.js'))
+  mock('tests/mock/a.js')
   expect(mock).toHaveBeenCalled()
   expect(mock).toHaveReturned()
 })
@@ -20,7 +20,7 @@ test('createPathTree应当接收一个入口参数并返回结果', () => {
 test('createPathTree应当返回包含name、source、children属性的节点树对象', () => {
   const mock = j.fn((path) => createPathTree(path))
 
-  const tree = mock(path.resolve(__dirname, './mock/a.js'))
+  const tree = mock('tests/mock/a.js')
   expect(tree).toBeDefined()
   expect(tree).toHaveProperty('children')
   expect(tree).toHaveProperty('name')
@@ -39,7 +39,7 @@ test('createPathTree接收到错误的入口路径时应当抛出异常', () => 
 })
 
 test('createPathTree可以正确解析入口文件引用的其他文件路径', () => {
-  const entryPath = path.resolve(__dirname, './mock/b.js')
+  const entryPath = 'tests/mock/b.js'
   const tree = createPathTree(entryPath)
   expect(tree).toBeDefined()
   expect(tree.children.length).toBe(1)
@@ -57,14 +57,14 @@ test('createPathTree可以正确解析入口文件引用的其他文件路径', 
 })
 
 test('createPathTree传入第2个参数时应该正确更新引用对象', () => {
-  const entryPath = path.resolve(__dirname, './mock/b.js')
+  const entryPath = 'tests/mock/b.js'
   const secondParams = {}
   createPathTree(entryPath, secondParams)
   expect(secondParams).not.toEqual({})
 })
 
 test('createPathTree传入第2个参数时应将传入对象更新为以引用路径为key的node map', () => {
-  const entryPath = path.resolve(__dirname, './mock/b.js')
+  const entryPath = 'tests/mock/b.js'
   const referencePath = 'tests/mock/c.js'
   const secondParams = {}
   const tree = createPathTree(entryPath, secondParams)

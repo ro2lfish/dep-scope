@@ -1,5 +1,5 @@
 const path = require('path')
-const { expect, test, jest: j } = require('@jest/globals')
+const { expect, test } = require('@jest/globals')
 const {
   detect,
   detectDir,
